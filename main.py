@@ -31,7 +31,12 @@ def replicate_virus():
     check_requirements()
 
     disclaimer = "WARNING: This program is for educational purposes only. Do not use it for malicious purposes. By continuing, you acknowledge that you are solely responsible for any consequences of using this program."
-    confirm = ctypes.windll.user32.MessageBoxW(None, disclaimer, "Disclaimer", 1 | 0x30)
+    if os.name == 'nt':
+        confirm = ctypes.windll.user32.MessageBoxW(None, disclaimer, "Disclaimer", 1 | 0x30)
+    else:
+        libc = ctypes.CDLL(None)
+        MessageBox = getattr(libc, 'zenity')
+        confirm = MessageBox(disclaimer.encode(), "Disclaimer".encode(), 0, 1)
     
     if confirm == 1:
         if os.name == 'nt':
